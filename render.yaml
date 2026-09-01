@@ -1,0 +1,6 @@
+services:
+  - type: static_site
+    name: 101-coffee-barista-school
+    buildCommand: ""
+    staticPublishPath: .
+    autoDeploy: yes
