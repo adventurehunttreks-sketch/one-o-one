@@ -20,6 +20,8 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         
         .sidebar-header {
@@ -39,7 +41,11 @@
         .sidebar-header h2 { font-size: 18px; margin-top: 10px; color: #6CB4EE; }
         .sidebar-header p { font-size: 12px; color: #aaa; }
         
-        .sidebar-menu { padding: 15px 0; }
+        .sidebar-menu { 
+            padding: 15px 0; 
+            flex: 1;
+            overflow-y: auto;
+        }
         
         .sidebar-menu a {
             display: flex;
@@ -64,9 +70,7 @@
         .sidebar-footer {
             padding: 15px 20px;
             border-top: 1px solid #444;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
+            flex-shrink: 0;
         }
         
         .sidebar-footer a {
