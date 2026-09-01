@@ -264,17 +264,83 @@
         .status-delivered { background: #d4edda; color: #155724; }
         
         @media (max-width: 992px) {
-            .sidebar { width: 70px; }
-            .sidebar-header h2, .sidebar-header p, .sidebar-menu span, .sidebar-footer span { display: none; }
-            .sidebar-menu a { justify-content: center; padding: 12px; }
-            .sidebar-menu a i { width: auto; }
-            .main-content { margin-left: 70px; }
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+            .sidebar { 
+                width: 60px;
+            }
+            .sidebar-header h2, .sidebar-header p, .sidebar-menu span, .sidebar-footer span { 
+                display: none; 
+            }
+            .sidebar-menu a { 
+                justify-content: center; 
+                padding: 12px 8px; 
+                font-size: 16px;
+            }
+            .sidebar-menu a i { 
+                width: auto; 
+                margin: 0;
+            }
+            .sidebar-footer a {
+                justify-content: center;
+                padding: 10px;
+            }
+            .sidebar-footer a i {
+                margin: 0;
+            }
+            .main-content { 
+                margin-left: 60px; 
+            }
+            .dashboard-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
         }
         
         @media (max-width: 576px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .sidebar { 
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            .sidebar-header { 
+                display: none; 
+            }
+            .sidebar-menu {
+                padding: 8px 0;
+                flex: none;
+                display: flex;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            .sidebar-menu a {
+                padding: 8px 12px;
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            .sidebar-menu a.active {
+                border-bottom-color: #6CB4EE;
+                border-left-color: transparent;
+            }
+            .sidebar-footer {
+                display: none;
+            }
+            .main-content { 
+                margin-left: 0; 
+                padding: 15px;
+            }
+            .dashboard-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .form-row, .form-row-3 { 
+                grid-template-columns: 1fr; 
+            }
+            .top-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
