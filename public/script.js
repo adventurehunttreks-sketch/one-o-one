@@ -447,7 +447,8 @@ function loadTeamFromStorage() {
         { id: 5, name: 'Head Barista and Trainer', role: 'Trainer', photo: 'photos5.jpg', facebook: '', instagram: '', desc: '' }
     ];
     
-    const team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+    // Load from cloud (site_team) or local (teamMembers)
+    const team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
     const teamToShow = team.length > 0 ? team : defaultTeam;
     
     const teamGrid = document.getElementById('teamGrid');

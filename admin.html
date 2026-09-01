@@ -996,7 +996,7 @@
 
         // Load Team
         function loadTeam() {
-            const team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+            const team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
             document.getElementById('teamList').innerHTML = team.length === 0 ? 
                 '<p style="color:#888;">No team members yet. Click "Add Member" to add one.</p>' :
                 team.map(t => `
@@ -1051,11 +1051,11 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = async function(e) {
-                let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+                let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
                 const member = team.find(t => t.id === id);
                 if (member) {
                     member.photo = e.target.result;
-                    localStorage.setItem('teamMembers', JSON.stringify(team));
+                    localStorage.setItem('site_team', JSON.stringify(team));
                     await dbSave('team', team);
                     loadTeam();
                     loadDashboard();
@@ -1065,27 +1065,27 @@
         }
 
         function updateTeam(id, field, value) {
-            let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+            let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
             const member = team.find(t => t.id === id);
             if (member) {
                 member[field] = value;
-                localStorage.setItem('teamMembers', JSON.stringify(team));
+                localStorage.setItem('site_team', JSON.stringify(team));
                 dbSave('team', team);
             }
         }
 
         function deleteTeam(id) {
             if (!confirm('Delete this member?')) return;
-            let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+            let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
             team = team.filter(t => t.id !== id);
-            localStorage.setItem('teamMembers', JSON.stringify(team));
+            localStorage.setItem('site_team', JSON.stringify(team));
             dbSave('team', team);
             loadTeam();
             loadDashboard();
         }
 
         document.getElementById('addTeamBtn').addEventListener('click', async () => {
-            let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+            let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
             const newMember = { 
                 id: Date.now(), 
                 name: 'New Member', 
@@ -1096,7 +1096,7 @@
                 instagram: ''
             };
             team.push(newMember);
-            localStorage.setItem('teamMembers', JSON.stringify(team));
+            localStorage.setItem('site_team', JSON.stringify(team));
             await dbSave('team', team);
             loadTeam();
             loadDashboard();
