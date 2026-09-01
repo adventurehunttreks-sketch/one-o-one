@@ -399,6 +399,106 @@ body {
     font-weight: 500;
 }
 
+/* Mission & Vision */
+.mission-vision {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #ddd;
+}
+
+.mv-card {
+    text-align: center;
+    padding: 30px 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+}
+
+.mv-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.mv-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.mv-icon i {
+    font-size: 24px;
+    color: var(--dark-bg);
+}
+
+.mv-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--secondary-color);
+}
+
+.mv-card p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* Why Choose Us */
+.why-us {
+    margin-top: 60px;
+    padding: 40px;
+    background: linear-gradient(135deg, #f8f4ef 0%, #fff 100%);
+    border-radius: 15px;
+    border: 1px solid #e8e0d8;
+}
+
+.why-us h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--secondary-color);
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.why-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.why-item i {
+    font-size: 22px;
+    color: #28a745;
+    margin-top: 3px;
+}
+
+.why-item h4 {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: var(--secondary-color);
+}
+
+.why-item p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+}
+
 /* Courses Section */
 .courses {
     padding: 100px 0;
@@ -1570,6 +1670,14 @@ body {
 
     .schedule-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .mission-vision {
+        grid-template-columns: 1fr;
+    }
+
+    .why-grid {
+        grid-template-columns: 1fr;
     }
 }
 
