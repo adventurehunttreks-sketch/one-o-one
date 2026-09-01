@@ -440,15 +440,15 @@ function loadFooterFromStorage() {
 
 function loadTeamFromStorage() {
     const defaultTeam = [
-        { id: 1, name: 'CEO', role: 'CEO & Training Director', photo: 'photos1.jpg', facebook: '', instagram: '', desc: '' },
+        { id: 1, name: 'Ramesh Karki', role: 'CEO & Training Director', photo: 'photos1.jpg', facebook: '', instagram: '', desc: '' },
         { id: 2, name: 'Urmila Shrestha', role: 'Barista Head & Training Instructor', photo: 'trainer2.jpeg', facebook: '', instagram: '', desc: '' },
-        { id: 3, name: 'Head Barista & Trainer', role: 'Trainer', photo: 'photos3.jpg', facebook: '', instagram: '', desc: '' },
-        { id: 4, name: 'Coffee Expert', role: 'Coffee Quality Expert', photo: 'photos4.jpg', facebook: '', instagram: '', desc: '' },
-        { id: 5, name: 'Head Barista and Trainer', role: 'Trainer', photo: 'photos5.jpg', facebook: '', instagram: '', desc: '' }
+        { id: 3, name: 'Trainer 3', role: 'Trainer', photo: 'trainer 3.jpg', facebook: '', instagram: '', desc: '' },
+        { id: 4, name: 'Coffee Expert', role: 'Coffee Quality Expert', photo: 'trainer.jpeg', facebook: '', instagram: '', desc: '' },
+        { id: 5, name: 'Head Barista', role: 'Trainer', photo: 'photos5.jpg', facebook: '', instagram: '', desc: '' }
     ];
     
-    // Load from cloud (site_team) or local (teamMembers)
-    const team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
+    // Load from cloud only
+    const team = JSON.parse(localStorage.getItem('site_team') || '[]');
     const teamToShow = team.length > 0 ? team : defaultTeam;
     
     const teamGrid = document.getElementById('teamGrid');

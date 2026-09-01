@@ -678,27 +678,28 @@
         ];
 
         // Initialize gallery with defaults if empty
-        function initGallery() {
-            const gallery = localStorage.getItem('galleryImages');
-            if (!gallery || JSON.parse(gallery).length === 0) {
-                localStorage.setItem('galleryImages', JSON.stringify(defaultGallery));
+        async function initGallery() {
+            const gallery = await getData('gallery');
+            if (!gallery || gallery.length === 0) {
+                await saveData('gallery', defaultGallery);
             }
         }
 
-        function getData(key) {
-            return JSON.parse(localStorage.getItem('site_' + key) || 'null') || defaultData[key];
+        function saveData(key, data) {
+            // Save to cloud only
+            dbSave(key, data);
         }
 
-        function saveData(key, data) {
-            localStorage.setItem('site_' + key, JSON.stringify(data));
+        async function getData(key) {
+            // Get from cloud only
+            return await dbGet(key) || [];
         }
 
         // Load Dashboard
-        function loadDashboard() {
-            const contacts = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
-            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-            const team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
-            const gallery = JSON.parse(localStorage.getItem('galleryImages') || '[]');
+        async function loadDashboard() {
+            const contacts = await getData('submissions');
+            const team = await getData('team');
+            const gallery = await getData('gallery');
             
             document.getElementById('contactCount').textContent = contacts.length;
             document.getElementById('orderCount').textContent = orders.length;
@@ -720,11 +721,11 @@
         }
 
         // Load Hero
-        function loadHero() {
-            const data = getData('hero');
-            document.getElementById('hero-title').value = data.title;
-            document.getElementById('hero-subtitle').value = data.subtitle;
-            document.getElementById('hero-btn').value = data.btn;
+        async function loadHero() {
+            const data = await getData('hero');
+            document.getElementById('hero-title').value = data.title || '';
+            document.getElementById('hero-subtitle').value = data.subtitle || '';
+            document.getElementById('hero-btn').value = data.btn || '';
         }
 
         document.getElementById('saveHero').addEventListener('click', async () => {
@@ -739,14 +740,14 @@
         });
 
         // Load About
-        function loadAbout() {
-            const data = getData('about');
-            document.getElementById('about-title').value = data.title;
-            document.getElementById('about-subtitle').value = data.subtitle;
-            document.getElementById('about-desc').value = data.desc;
-            document.getElementById('about-year').value = data.year;
-            document.getElementById('about-students').value = data.students;
-            document.getElementById('about-centers').value = data.centers;
+        async function loadAbout() {
+            const data = await getData('about');
+            document.getElementById('about-title').value = data.title || '';
+            document.getElementById('about-subtitle').value = data.subtitle || '';
+            document.getElementById('about-desc').value = data.desc || '';
+            document.getElementById('about-year').value = data.year || '';
+            document.getElementById('about-students').value = data.students || '';
+            document.getElementById('about-centers').value = data.centers || '';
         }
 
         document.getElementById('saveAbout').addEventListener('click', async () => {
@@ -764,16 +765,16 @@
         });
 
         // Load Content
-        function loadContent() {
-            const data = getData('content');
-            document.getElementById('gen-phone1').value = data.phone1;
-            document.getElementById('gen-phone2').value = data.phone2;
-            document.getElementById('gen-email').value = data.email;
-            document.getElementById('gen-facebook').value = data.facebook;
-            document.getElementById('gen-instagram').value = data.instagram;
-            document.getElementById('gen-tiktok').value = data.tiktok;
-            document.getElementById('gen-loc1').value = data.loc1;
-            document.getElementById('gen-loc2').value = data.loc2;
+        async function loadContent() {
+            const data = await getData('content');
+            document.getElementById('gen-phone1').value = data.phone1 || '';
+            document.getElementById('gen-phone2').value = data.phone2 || '';
+            document.getElementById('gen-email').value = data.email || '';
+            document.getElementById('gen-facebook').value = data.facebook || '';
+            document.getElementById('gen-instagram').value = data.instagram || '';
+            document.getElementById('gen-tiktok').value = data.tiktok || '';
+            document.getElementById('gen-loc1').value = data.loc1 || '';
+            document.getElementById('gen-loc2').value = data.loc2 || '';
         }
 
         document.getElementById('saveContent').addEventListener('click', async () => {
@@ -793,23 +794,15 @@
         });
 
         // Load Courses
-        function loadCourses() {
-            const courses = getData('courses');
+        async function loadCourses() {
+            const courses = await getData('courses');
             document.getElementById('coursesList').innerHTML = courses.map(c => `
                 <div class="item-card" style="margin-bottom:15px; border-left-color:${c.id === 3 ? '#E8A849' : '#6CB4EE'};">
                     <div style="display:flex; gap:15px; align-items:start;">
-                        <div style="position:relative; flex-shrink:0;">
-                            ${c.image ? 
-                                `<img src="${c.image}" style="width:100px; height:80px; object-fit:cover; border-radius:8px;">` : 
-                                `<div style="width:100px; height:80px; background:#e9ecef; border-radius:8px; display:flex; align-items:center; justify-content:center; border:2px dashed #ccc;">
-                                    <i class="fas fa-image" style="font-size:24px; color:#aaa;"></i>
-                                </div>`
-                            }
-                            <label style="position:absolute; bottom:3px; right:3px; background:#6CB4EE; color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px;">
-                                <i class="fas fa-camera"></i>
-                                <input type="file" accept="image/*" onchange="uploadCourseImage(${c.id}, this)" style="display:none;">
-                            </label>
-                        </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:11px;">Image Filename (e.g., course1.jpg)</label>
+                                    <input type="text" value="${c.image || ''}" onchange="updateCourse(${c.id}, 'image', this.value)" style="padding:6px 10px; font-size:13px; width:100%;" placeholder="course1.jpg">
+                                </div>
                         <div style="flex:1;">
                             <div class="form-row">
                                 <div class="form-group" style="margin-bottom:8px;">
@@ -840,75 +833,47 @@
             `).join('');
         }
 
-        function uploadCourseImage(id, input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                let courses = getData('courses');
-                const course = courses.find(c => c.id === id);
-                if (course) {
-                    course.image = e.target.result;
-                    saveData('courses', courses);
-                    await dbSave('courses', courses);
-                    loadCourses();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateCourse(id, field, value) {
-            let courses = getData('courses');
+        async function updateCourse(id, field, value) {
+            let courses = await getData('courses');
             const course = courses.find(c => c.id === id);
             if (course) {
                 course[field] = value;
-                saveData('courses', courses);
-                dbSave('courses', courses);
+                await saveData('courses', courses);
             }
         }
 
-        function deleteCourse(id) {
+        async function deleteCourse(id) {
             if (!confirm('Delete this course?')) return;
-            let courses = getData('courses');
+            let courses = await getData('courses');
             courses = courses.filter(c => c.id !== id);
-            saveData('courses', courses);
-            dbSave('courses', courses);
+            await saveData('courses', courses);
             loadCourses();
         }
 
         document.getElementById('addCourseBtn').addEventListener('click', async () => {
-            let courses = getData('courses');
+            let courses = await getData('courses');
             courses.push({ 
                 id: Date.now(), 
                 name: 'New Course', 
-                duration: '10 Days',  
+                duration: '10 Days', 
                 price: 'NPR 10,000', 
                 desc: 'Course description here...', 
                 features: ['Feature 1', 'Feature 2', 'Feature 3'],
                 image: ''
             });
-            saveData('courses', courses);
-            dbSave('courses', courses);
+            await saveData('courses', courses);
             loadCourses();
         });
 
         // Load Sales
-        function loadSales() {
-            const sales = getData('sales');
+        async function loadSales() {
+            const sales = await getData('sales');
             document.getElementById('salesList').innerHTML = sales.map(s => `
                 <div class="item-card" style="margin-bottom:15px; border-left-color:${s.id === 2 ? '#28a745' : '#6CB4EE'};">
                     <div style="display:flex; gap:15px; align-items:start;">
-                        <div style="position:relative; flex-shrink:0;">
-                            ${s.image ? 
-                                `<img src="${s.image}" style="width:100px; height:80px; object-fit:cover; border-radius:8px;">` : 
-                                `<div style="width:100px; height:80px; background:#e9ecef; border-radius:8px; display:flex; align-items:center; justify-content:center; border:2px dashed #ccc;">
-                                    <i class="fas fa-image" style="font-size:24px; color:#aaa;"></i>
-                                </div>`
-                            }
-                            <label style="position:absolute; bottom:3px; right:3px; background:#6CB4EE; color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px;">
-                                <i class="fas fa-camera"></i>
-                                <input type="file" accept="image/*" onchange="uploadSaleImage(${s.id}, this)" style="display:none;">
-                            </label>
+                        <div style="flex-shrink:0;">
+                            <label style="font-size:11px;">Image Filename</label>
+                            <input type="text" value="${s.image || ''}" onchange="updateSale(${s.id}, 'image', this.value)" style="padding:6px 10px; font-size:13px; width:150px;" placeholder="product1.jpg">
                         </div>
                         <div style="flex:1;">
                             <div class="form-row">
@@ -942,44 +907,25 @@
             `).join('');
         }
 
-        function uploadSaleImage(id, input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                let sales = getData('sales');
-                const sale = sales.find(s => s.id === id);
-                if (sale) {
-                    sale.image = e.target.result;
-                    saveData('sales', sales);
-                    await dbSave('sales', sales);
-                    loadSales();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateSale(id, field, value) {
-            let sales = getData('sales');
+        async function updateSale(id, field, value) {
+            let sales = await getData('sales');
             const sale = sales.find(s => s.id === id);
             if (sale) {
                 sale[field] = value;
-                saveData('sales', sales);
-                dbSave('sales', sales);
+                await saveData('sales', sales);
             }
         }
 
-        function deleteSale(id) {
+        async function deleteSale(id) {
             if (!confirm('Delete this item?')) return;
-            let sales = getData('sales');
+            let sales = await getData('sales');
             sales = sales.filter(s => s.id !== id);
-            saveData('sales', sales);
-            dbSave('sales', sales);
+            await saveData('sales', sales);
             loadSales();
         }
 
         document.getElementById('addSaleBtn').addEventListener('click', async () => {
-            let sales = getData('sales');
+            let sales = await getData('sales');
             sales.push({ 
                 id: Date.now(), 
                 name: 'New Sales Item', 
@@ -989,14 +935,13 @@
                 price: 'Contact for pricing',
                 image: ''
             });
-            saveData('sales', sales);
-            await dbSave('sales', sales);
+            await saveData('sales', sales);
             loadSales();
         });
 
         // Load Team
-        function loadTeam() {
-            const team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
+        async function loadTeam() {
+            const team = await getData('team');
             document.getElementById('teamList').innerHTML = team.length === 0 ? 
                 '<p style="color:#888;">No team members yet. Click "Add Member" to add one.</p>' :
                 team.map(t => `
@@ -1009,10 +954,6 @@
                                         <i class="fas fa-user" style="font-size:40px; color:#aaa;"></i>
                                     </div>`
                                 }
-                                <label style="position:absolute; bottom:5px; right:5px; background:#6CB4EE; color:#fff; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px;">
-                                    <i class="fas fa-camera"></i>
-                                    <input type="file" accept="image/*" onchange="uploadTeamPhoto(${t.id}, this)" style="display:none;">
-                                </label>
                             </div>
                             <div style="flex:1;">
                                 <div class="form-row">
@@ -1024,6 +965,10 @@
                                         <label style="font-size:11px;">Role/Position</label>
                                         <input type="text" value="${t.role}" onchange="updateTeam(${t.id}, 'role', this.value)" style="padding:8px 12px; font-size:14px; width:100%;">
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:11px;">Photo Filename (e.g., trainer1.jpeg)</label>
+                                    <input type="text" value="${t.photo || ''}" onchange="updateTeam(${t.id}, 'photo', this.value)" style="padding:8px 12px; font-size:14px; width:100%;" placeholder="trainer1.jpeg">
                                 </div>
                                 <div class="form-group">
                                     <label style="font-size:11px;">Description</label>
@@ -1046,46 +991,26 @@
                 `).join('');
         }
 
-        function uploadTeamPhoto(id, input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
-                const member = team.find(t => t.id === id);
-                if (member) {
-                    member.photo = e.target.result;
-                    localStorage.setItem('site_team', JSON.stringify(team));
-                    await dbSave('team', team);
-                    loadTeam();
-                    loadDashboard();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateTeam(id, field, value) {
-            let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
+        async function updateTeam(id, field, value) {
+            let team = await getData('team');
             const member = team.find(t => t.id === id);
             if (member) {
                 member[field] = value;
-                localStorage.setItem('site_team', JSON.stringify(team));
-                dbSave('team', team);
+                await saveData('team', team);
             }
         }
 
-        function deleteTeam(id) {
+        async function deleteTeam(id) {
             if (!confirm('Delete this member?')) return;
-            let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
+            let team = await getData('team');
             team = team.filter(t => t.id !== id);
-            localStorage.setItem('site_team', JSON.stringify(team));
-            dbSave('team', team);
+            await saveData('team', team);
             loadTeam();
             loadDashboard();
         }
 
         document.getElementById('addTeamBtn').addEventListener('click', async () => {
-            let team = JSON.parse(localStorage.getItem('site_team') || localStorage.getItem('teamMembers') || '[]');
+            let team = await getData('team');
             const newMember = { 
                 id: Date.now(), 
                 name: 'New Member', 
@@ -1096,66 +1021,62 @@
                 instagram: ''
             };
             team.push(newMember);
-            localStorage.setItem('site_team', JSON.stringify(team));
-            await dbSave('team', team);
+            await saveData('team', team);
             loadTeam();
             loadDashboard();
         });
 
         // Load Gallery
-        function loadGallery() {
-            const gallery = JSON.parse(localStorage.getItem('galleryImages') || '[]');
+        async function loadGallery() {
+            const gallery = await getData('gallery');
             document.getElementById('galleryList').innerHTML = gallery.length === 0 ? 
-                '<p style="color:#888;">No images uploaded yet.</p>' :
+                '<p style="color:#888;">No images yet. Add image filenames below.</p>' :
                 gallery.map((img, i) => `
                     <div class="item-card" style="display:flex; align-items:center; gap:15px;">
-                        <img src="${img.url}" class="item-img">
+                        ${img.url ? `<img src="${img.url}" style="width:80px; height:60px; object-fit:cover; border-radius:6px;">` : '<div style="width:80px; height:60px; background:#e9ecef; border-radius:6px;"></div>'}
                         <div style="flex:1;">
-                            <h4>${img.category || 'Uncategorized'}</h4>
+                            <input type="text" value="${img.url || ''}" onchange="updateGalleryItem(${i}, 'url', this.value)" style="padding:6px 10px; font-size:12px; width:60%;" placeholder="filename.jpg">
+                            <input type="text" value="${img.category || ''}" onchange="updateGalleryItem(${i}, 'category', this.value)" style="padding:6px 10px; font-size:12px; width:25%;" placeholder="category">
                         </div>
                         <button class="btn btn-danger btn-sm" onclick="deleteGallery(${i})">Delete</button>
                     </div>
                 `).join('');
         }
 
-        function deleteGallery(index) {
+        async function updateGalleryItem(index, field, value) {
+            let gallery = await getData('gallery');
+            if (gallery[index]) {
+                gallery[index][field] = value;
+                await saveData('gallery', gallery);
+            }
+        }
+
+        async function deleteGallery(index) {
             if (!confirm('Delete this image?')) return;
-            let gallery = JSON.parse(localStorage.getItem('galleryImages') || '[]');
+            let gallery = await getData('gallery');
             gallery.splice(index, 1);
-            localStorage.setItem('galleryImages', JSON.stringify(gallery));
-            dbSave('gallery', gallery);
+            await saveData('gallery', gallery);
             loadGallery();
             loadDashboard();
         }
 
-        document.getElementById('addGalleryBtn').addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = async function(event) {
-                    const cat = prompt('Category (training/coffee/events):') || 'training';
-                    let gallery = JSON.parse(localStorage.getItem('galleryImages') || '[]');
-                    gallery.push({ url: event.target.result, category: cat });
-                    localStorage.setItem('galleryImages', JSON.stringify(gallery));
-                    await dbSave('gallery', gallery);
-                    loadGallery();
-                    loadDashboard();
-                };
-                reader.readAsDataURL(file);
-            };
-            input.click();
+        document.getElementById('addGalleryBtn').addEventListener('click', async () => {
+            const filename = prompt('Enter image filename (e.g., photos1.jpg):');
+            if (!filename) return;
+            const cat = prompt('Category (training/coffee/events):') || 'training';
+            let gallery = await getData('gallery');
+            gallery.push({ url: filename, category: cat });
+            await saveData('gallery', gallery);
+            loadGallery();
+            loadDashboard();
         });
 
         // Load Contact
-        function loadContact() {
-            const data = getData('contact');
-            document.getElementById('contact-title').value = data.title;
-            document.getElementById('contact-desc').value = data.desc;
-            document.getElementById('contact-map').value = data.map;
+        async function loadContact() {
+            const data = await getData('contact');
+            document.getElementById('contact-title').value = data.title || '';
+            document.getElementById('contact-desc').value = data.desc || '';
+            document.getElementById('contact-map').value = data.map || '';
         }
 
         document.getElementById('saveContact').addEventListener('click', async () => {
@@ -1171,7 +1092,7 @@
 
         // Load Submissions
         function loadSubmissions() {
-            const contacts = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+            const contacts = JSON.parse(localStorage.getItem('site_submissions') || localStorage.getItem('contactSubmissions') || '[]');
             document.getElementById('submissionsList').innerHTML = contacts.length === 0 ? 
                 '<p style="color:#888;">No submissions yet.</p>' :
                 contacts.map(c => `
@@ -1186,16 +1107,18 @@
                 `).join('');
         }
 
-        document.getElementById('clearSubBtn').addEventListener('click', () => {
+        document.getElementById('clearSubBtn').addEventListener('click', async () => {
             if (!confirm('Clear all submissions?')) return;
+            localStorage.removeItem('site_submissions');
             localStorage.removeItem('contactSubmissions');
+            await dbSave('submissions', []);
             loadSubmissions();
             loadDashboard();
         });
 
         // Load Orders
         function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const orders = JSON.parse(localStorage.getItem('site_orders') || localStorage.getItem('orders') || '[]');
             const payMethods = { 'cod': 'Cash on Delivery', 'esewa': 'eSewa', 'khalti': 'Khalti', 'bank': 'Bank Transfer' };
             
             document.getElementById('ordersList').innerHTML = orders.length === 0 ? 
@@ -1226,11 +1149,11 @@
         }
 
         function updateOrderStatus(id, status) {
-            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            let orders = JSON.parse(localStorage.getItem('site_orders') || localStorage.getItem('orders') || '[]');
             const order = orders.find(o => o.id === id);
             if (order) {
                 order.status = status;
-                localStorage.setItem('orders', JSON.stringify(orders));
+                localStorage.setItem('site_orders', JSON.stringify(orders));
                 dbSave('orders', orders);
                 loadOrders();
                 loadDashboard();
@@ -1239,6 +1162,7 @@
 
         document.getElementById('clearOrdersBtn').addEventListener('click', async () => {
             if (!confirm('Clear all orders?')) return;
+            localStorage.removeItem('site_orders');
             localStorage.removeItem('orders');
             await dbSave('orders', []);
             loadOrders();
@@ -1246,11 +1170,11 @@
         });
 
         // Load Footer
-        function loadFooter() {
-            const data = getData('footer');
-            document.getElementById('footer-copyright').value = data.copyright;
-            document.getElementById('footer-sister-name').value = data.sisterName;
-            document.getElementById('footer-sister-url').value = data.sisterUrl;
+        async function loadFooter() {
+            const data = await getData('footer');
+            document.getElementById('footer-copyright').value = data.copyright || '';
+            document.getElementById('footer-sister-name').value = data.sisterName || '';
+            document.getElementById('footer-sister-url').value = data.sisterUrl || '';
         }
 
         document.getElementById('saveFooter').addEventListener('click', async () => {
