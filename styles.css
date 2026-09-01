@@ -499,6 +499,120 @@ body {
     line-height: 1.6;
 }
 
+/* Sales Section */
+.sales {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.sales .section-header h2 {
+    color: var(--text-light);
+}
+
+.sales .section-subtitle {
+    color: #aaa;
+}
+
+.sales-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.sales-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 35px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.sales-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.sales-card.featured {
+    border: 2px solid var(--primary-color);
+}
+
+.sales-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-color);
+    color: var(--dark-bg);
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sales-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.sales-icon i {
+    font-size: 32px;
+    color: var(--dark-bg);
+}
+
+.sales-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.sales-card p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.sales-features {
+    list-style: none;
+    margin-bottom: 25px;
+    text-align: left;
+    background: #f9f9f9;
+    padding: 15px 20px;
+    border-radius: 10px;
+}
+
+.sales-features li {
+    padding: 8px 0;
+    color: #555;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.sales-features li:last-child {
+    border-bottom: none;
+}
+
+.sales-features i {
+    color: var(--primary-color);
+    font-size: 12px;
+}
+
 /* Courses Section */
 .courses {
     padding: 100px 0;
@@ -1677,6 +1791,10 @@ body {
     }
 
     .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sales-grid {
         grid-template-columns: 1fr;
     }
 }

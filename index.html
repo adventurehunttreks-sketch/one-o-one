@@ -40,6 +40,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#courses">Courses</a></li>
                     <li><a href="#team">Our Team</a></li>
+                    <li><a href="#sales">Sales</a></li>
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -383,6 +384,58 @@
         </div>
     </section>
 
+    <!-- Sales Section -->
+    <section id="sales" class="sales">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Sales</h2>
+                <div class="underline"></div>
+                <p class="section-subtitle">Premium coffee equipment, beans, and expert consulting</p>
+            </div>
+            <div class="sales-grid" id="salesGrid">
+                <div class="sales-card">
+                    <div class="sales-icon"><i class="fas fa-cog"></i></div>
+                    <h3>Machine & Equipment</h3>
+                    <p>Professional espresso machines, grinders, brewers, and barista tools from top international brands. We supply equipment for cafes, restaurants, and home baristas.</p>
+                    <ul class="sales-features">
+                        <li><i class="fas fa-check"></i> Espresso Machines</li>
+                        <li><i class="fas fa-check"></i> Coffee Grinders</li>
+                        <li><i class="fas fa-check"></i> Brewing Equipment</li>
+                        <li><i class="fas fa-check"></i> Barista Tools & Accessories</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">Get Quote</a>
+                </div>
+
+                <div class="sales-card featured">
+                    <div class="sales-badge">Best Seller</div>
+                    <div class="sales-icon"><i class="fas fa-seedling"></i></div>
+                    <h3>Roasted Beans</h3>
+                    <p>Premium quality roasted coffee beans sourced from Nepal's finest coffee farms. Available in various roast levels and flavor profiles to suit every palate.</p>
+                    <ul class="sales-features">
+                        <li><i class="fas fa-check"></i> Light Roast</li>
+                        <li><i class="fas fa-check"></i> Medium Roast</li>
+                        <li><i class="fas fa-check"></i> Dark Roast</li>
+                        <li><i class="fas fa-check"></i> Custom Blends</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">Order Now</a>
+                </div>
+
+                <div class="sales-card">
+                    <div class="sales-icon"><i class="fas fa-headset"></i></div>
+                    <h3>Consultant Services</h3>
+                    <p>Expert consulting for cafe setup, menu development, equipment selection, and coffee business planning. Let our experts help you build your dream coffee business.</p>
+                    <ul class="sales-features">
+                        <li><i class="fas fa-check"></i> Cafe Setup & Design</li>
+                        <li><i class="fas fa-check"></i> Menu Development</li>
+                        <li><i class="fas fa-check"></i> Equipment Selection</li>
+                        <li><i class="fas fa-check"></i> Business Planning</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Gallery Section -->
     <section id="gallery" class="gallery">
         <div class="container">
@@ -710,6 +763,7 @@
                 <div class="admin-tabs">
                     <button class="admin-tab active" data-tab="content">Content</button>
                     <button class="admin-tab" data-tab="courses">Courses</button>
+                    <button class="admin-tab" data-tab="sales">Sales</button>
                     <button class="admin-tab" data-tab="team">Team</button>
                     <button class="admin-tab" data-tab="images">Images</button>
                     <button class="admin-tab" data-tab="settings">Settings</button>
@@ -758,6 +812,13 @@
                     <h3>Edit Courses</h3>
                     <div class="admin-course-list" id="adminCourseList"></div>
                     <button id="saveCourses" class="btn btn-primary btn-block">Save Courses</button>
+                </div>
+
+                <!-- Sales Tab -->
+                <div class="admin-tab-content" id="tab-sales">
+                    <h3>Edit Sales Items</h3>
+                    <div class="admin-sales-list" id="adminSalesList"></div>
+                    <button id="saveSales" class="btn btn-primary btn-block">Save Sales</button>
                 </div>
 
                 <!-- Team Tab -->

@@ -11,6 +11,7 @@ const AdminPanel = {
         this.loadGalleryImages();
         this.loadTeamMembers();
         this.loadCourses();
+        this.loadSales();
     },
 
     bindEvents() {
@@ -40,6 +41,9 @@ const AdminPanel = {
 
         // Course management
         document.getElementById('saveCourses')?.addEventListener('click', () => this.saveCourses());
+
+        // Sales management
+        document.getElementById('saveSales')?.addEventListener('click', () => this.saveSales());
 
         // Add image
         document.getElementById('addImage')?.addEventListener('click', () => this.addImage());
@@ -691,6 +695,110 @@ const AdminPanel = {
         });
     },
 
+    // Sales Management Functions
+    getDefaultSales() {
+        return [
+            {
+                id: 1,
+                name: 'Machine & Equipment',
+                icon: 'fa-cog',
+                desc: 'Professional espresso machines, grinders, brewers, and barista tools from top international brands. We supply equipment for cafes, restaurants, and home baristas.',
+                features: ['Espresso Machines', 'Coffee Grinders', 'Brewing Equipment', 'Barista Tools & Accessories'],
+                btnText: 'Get Quote',
+                isFeatured: false
+            },
+            {
+                id: 2,
+                name: 'Roasted Beans',
+                icon: 'fa-seedling',
+                desc: 'Premium quality roasted coffee beans sourced from Nepal\'s finest coffee farms. Available in various roast levels and flavor profiles to suit every palate.',
+                features: ['Light Roast', 'Medium Roast', 'Dark Roast', 'Custom Blends'],
+                btnText: 'Order Now',
+                isFeatured: true
+            },
+            {
+                id: 3,
+                name: 'Consultant Services',
+                icon: 'fa-headset',
+                desc: 'Expert consulting for cafe setup, menu development, equipment selection, and coffee business planning. Let our experts help you build your dream coffee business.',
+                features: ['Cafe Setup & Design', 'Menu Development', 'Equipment Selection', 'Business Planning'],
+                btnText: 'Contact Us',
+                isFeatured: false
+            }
+        ];
+    },
+
+    loadSales() {
+        const sales = JSON.parse(localStorage.getItem('sales') || '[]');
+        const salesList = document.getElementById('adminSalesList');
+        if (!salesList) return;
+
+        const allSales = sales.length > 0 ? sales : this.getDefaultSales();
+        
+        salesList.innerHTML = '';
+        allSales.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'admin-course-item';
+            div.innerHTML = `
+                <h4>Sales Item ${index + 1}</h4>
+                <label>Item Name</label>
+                <input type="text" class="sales-name" data-index="${index}" value="${item.name}">
+                <label>Description</label>
+                <textarea class="sales-desc" data-index="${index}">${item.desc}</textarea>
+                <label>Button Text</label>
+                <input type="text" class="sales-btn" data-index="${index}" value="${item.btnText}">
+                <label>Features (comma separated)</label>
+                <input type="text" class="sales-features-input" data-index="${index}" value="${item.features.join(', ')}">
+            `;
+            salesList.appendChild(div);
+        });
+    },
+
+    saveSales() {
+        const sales = [];
+        const items = document.querySelectorAll('#adminSalesList .admin-course-item');
+        
+        items.forEach((item, index) => {
+            const defaults = this.getDefaultSales();
+            sales.push({
+                id: index + 1,
+                name: item.querySelector('.sales-name').value,
+                icon: defaults[index]?.icon || 'fa-tag',
+                desc: item.querySelector('.sales-desc').value,
+                features: item.querySelector('.sales-features-input').value.split(',').map(f => f.trim()).filter(f => f),
+                btnText: item.querySelector('.sales-btn').value,
+                isFeatured: index === 1
+            });
+        });
+
+        localStorage.setItem('sales', JSON.stringify(sales));
+        this.updateSalesOnPage(sales);
+        alert('Sales section updated successfully!');
+    },
+
+    updateSalesOnPage(sales) {
+        const salesGrid = document.getElementById('salesGrid');
+        if (!salesGrid) return;
+
+        salesGrid.innerHTML = '';
+        
+        sales.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = `sales-card ${item.isFeatured ? 'featured' : ''}`;
+            div.innerHTML = `
+                ${item.isFeatured ? '<div class="sales-badge">Best Seller</div>' : ''}
+                <div class="sales-icon"><i class="fas ${item.icon}"></i></div>
+                <h3>${item.name}</h3>
+                <p>${item.desc}</p>
+                <ul class="sales-features">
+                    ${item.features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
+                </ul>
+                <a href="#contact" class="btn btn-primary">${item.btnText}</a>
+            `;
+            salesGrid.appendChild(div);
+        });
+    },
+
     changePassword() {
         const current = document.getElementById('currentPassword').value;
         const newPass = document.getElementById('newPassword').value;
@@ -728,6 +836,7 @@ const AdminPanel = {
         localStorage.removeItem('galleryImages');
         localStorage.removeItem('teamMembers');
         localStorage.removeItem('courses');
+        localStorage.removeItem('sales');
         localStorage.removeItem('adminPass');
         
         this.password = 'admin123';
