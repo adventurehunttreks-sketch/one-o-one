@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultant Services - One O One Coffee</title>
+    <link rel="icon" type="image/jpg" href="logo.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>101 Coffee</h1>
+                    <span>Barista School</span>
+                </a>
+            </div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/101coffeeschool/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/101coffeeandbaristaschool/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@101coffeeandbaristaschoo" target="_blank"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#courses">Courses</a></li>
+                    <li><a href="index.html#team">Our Team</a></li>
+                    <li><a href="index.html#sales" class="active">Sales</a></li>
+                    <li><a href="index.html#gallery">Gallery</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-hero consultant-hero">
+        <div class="container">
+            <h1>Consultant Services</h1>
+            <p>Expert guidance for your coffee business journey</p>
+        </div>
+    </section>
+
+    <section class="consultant-section">
+        <div class="container">
+            <div class="consultant-grid">
+                <div class="consultant-services">
+                    <div class="section-header" style="text-align: left;">
+                        <h2>Our Services</h2>
+                        <div class="underline" style="margin-left: 0;"></div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-store"></i></div>
+                        <div class="service-content">
+                            <h3>Cafe Setup & Design</h3>
+                            <p>Complete cafe setup from concept to opening. We help with location selection, interior design, equipment layout, and workflow optimization.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-utensils"></i></div>
+                        <div class="service-content">
+                            <h3>Menu Development</h3>
+                            <p>Create a profitable and appealing menu. We help with recipe development, pricing strategy, and seasonal offerings.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-cogs"></i></div>
+                        <div class="service-content">
+                            <h3>Equipment Selection</h3>
+                            <p>Get expert advice on choosing the right equipment for your needs and budget. We help you avoid costly mistakes.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="service-content">
+                            <h3>Business Planning</h3>
+                            <p>Comprehensive business planning including market analysis, financial projections, and growth strategies.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-users-cog"></i></div>
+                        <div class="service-content">
+                            <h3>Staff Training</h3>
+                            <p>On-site training for your team. From barista skills to customer service, we ensure your staff is ready to deliver excellence.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-icon"><i class="fas fa-handshake"></i></div>
+                        <div class="service-content">
+                            <h3>Ongoing Support</h3>
+                            <p>Continuous support and consultation to help your business grow and adapt to market changes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="consultant-form-container">
+                    <div class="consultant-form-box">
+                        <h3><i class="fas fa-paper-plane"></i> Request Consultation</h3>
+                        <p>Fill out the form below and our experts will contact you within 24 hours.</p>
+                        
+                        <form id="consultantForm" class="consultant-form">
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <input type="text" name="name" required placeholder="Your full name">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Email *</label>
+                                    <input type="email" name="email" required placeholder="your@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone *</label>
+                                    <input type="tel" name="phone" required placeholder="98XXXXXXXX">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Business Type *</label>
+                                <select name="businessType" required>
+                                    <option value="">Select business type</option>
+                                    <option value="new-cafe">New Cafe Startup</option>
+                                    <option value="existing-cafe">Existing Cafe Upgrade</option>
+                                    <option value="coffee-cart">Coffee Cart/Kiosk</option>
+                                    <option value="restaurant">Restaurant Coffee Section</option>
+                                    <option value="hotel">Hotel Coffee Service</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Service Required *</label>
+                                <select name="service" required>
+                                    <option value="">Select service</option>
+                                    <option value="cafe-setup">Cafe Setup & Design</option>
+                                    <option value="menu">Menu Development</option>
+                                    <option value="equipment">Equipment Selection</option>
+                                    <option value="business-plan">Business Planning</option>
+                                    <option value="training">Staff Training</option>
+                                    <option value="all">All Services</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Budget Range</label>
+                                <select name="budget">
+                                    <option value="">Select budget range</option>
+                                    <option value="under-5lakhs">Under 5 Lakhs</option>
+                                    <option value="5-10lakhs">5-10 Lakhs</option>
+                                    <option value="10-20lakhs">10-20 Lakhs</option>
+                                    <option value="above-20lakhs">Above 20 Lakhs</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" name="location" placeholder="City/Location of your business">
+                            </div>
+                            <div class="form-group">
+                                <label>Message *</label>
+                                <textarea name="message" rows="4" required placeholder="Tell us about your project..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Submit Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="consultant-contact-strip">
+        <div class="container">
+            <p><i class="fas fa-phone"></i> Prefer to call? Reach us at: <strong>9851316494</strong> or <strong>9851165283</strong></p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>101 Coffee</h3>
+                    <p>Your journey to becoming a professional barista starts here.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#courses">Courses</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-phone"></i> 9851316494</p>
+                    <p><i class="fas fa-phone"></i> 9851165283</p>
+                    <p><i class="fas fa-envelope"></i> info@101coffee.com.np</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 101 Coffee. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menuToggle')?.addEventListener('click', function() {
+            document.querySelector('.nav').classList.toggle('active');
+        });
+
+        // Consultant form submission
+        const consultantForm = document.getElementById('consultantForm');
+        consultantForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(consultantForm);
+            const submission = {
+                id: Date.now(),
+                type: 'consultant',
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                businessType: formData.get('businessType'),
+                service: formData.get('service'),
+                budget: formData.get('budget'),
+                location: formData.get('location'),
+                message: formData.get('message'),
+                date: new Date().toISOString()
+            };
+            
+            const submissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+            submissions.unshift(submission);
+            localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
+
+            const btn = consultantForm.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'Request Sent!';
+            btn.style.background = '#28a745';
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                consultantForm.reset();
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

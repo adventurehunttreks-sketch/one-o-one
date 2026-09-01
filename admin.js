@@ -784,6 +784,8 @@ const AdminPanel = {
         const salesGrid = document.getElementById('salesGrid');
         if (!salesGrid) return;
 
+        const pageLinks = ['machines.html', 'beans.html', 'consultant.html'];
+        
         salesGrid.innerHTML = '';
         
         sales.forEach((item, index) => {
@@ -797,7 +799,7 @@ const AdminPanel = {
                 <ul class="sales-features">
                     ${item.features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
                 </ul>
-                <a href="#contact" class="btn btn-primary">${item.btnText}</a>
+                <a href="${pageLinks[index] || '#contact'}" class="btn btn-primary">${item.btnText}</a>
             `;
             salesGrid.appendChild(div);
         });
@@ -825,20 +827,40 @@ const AdminPanel = {
                 minute: '2-digit'
             });
             
+            const isConsultant = sub.type === 'consultant';
+            const borderColor = isConsultant ? '#28a745' : '#6CB4EE';
+            const typeBadge = isConsultant ? '<span style="background: #28a745; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 8px;">Consultant Request</span>' : '';
+            
+            let extraInfo = '';
+            if (isConsultant) {
+                const businessTypes = {'new-cafe': 'New Cafe', 'existing-cafe': 'Existing Cafe', 'coffee-cart': 'Coffee Cart', 'restaurant': 'Restaurant', 'hotel': 'Hotel', 'other': 'Other'};
+                const services = {'cafe-setup': 'Cafe Setup', 'menu': 'Menu Dev', 'equipment': 'Equipment', 'business-plan': 'Business Plan', 'training': 'Staff Training', 'all': 'All Services'};
+                const budgets = {'under-5lakhs': 'Under 5L', '5-10lakhs': '5-10L', '10-20lakhs': '10-20L', 'above-20lakhs': 'Above 20L'};
+                extraInfo = `
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 8px;">
+                        <p style="margin: 0; font-size: 12px;"><strong>Business:</strong> ${businessTypes[sub.businessType] || sub.businessType || 'N/A'}</p>
+                        <p style="margin: 0; font-size: 12px;"><strong>Service:</strong> ${services[sub.service] || sub.service || 'N/A'}</p>
+                        <p style="margin: 0; font-size: 12px;"><strong>Budget:</strong> ${budgets[sub.budget] || sub.budget || 'N/A'}</p>
+                    </div>
+                    ${sub.location ? `<p style="margin: 8px 0 0 0; font-size: 12px; color: #666;"><i class="fas fa-map-marker-alt" style="width: 15px; color: #28a745;"></i> Location: ${sub.location}</p>` : ''}
+                `;
+            }
+            
             const div = document.createElement('div');
             div.className = 'admin-contact-item';
-            div.style.cssText = 'background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #6CB4EE;';
+            div.style.cssText = `background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid ${borderColor};`;
             div.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <strong style="font-size: 16px; color: #333;">${sub.name}</strong>
+                    <strong style="font-size: 16px; color: #333;">${sub.name} ${typeBadge}</strong>
                     <span style="color: #888; font-size: 12px;">${formattedDate}</span>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
-                    <p style="margin: 0; color: #666;"><i class="fas fa-envelope" style="width: 20px; color: #6CB4EE;"></i> ${sub.email}</p>
-                    <p style="margin: 0; color: #666;"><i class="fas fa-phone" style="width: 20px; color: #6CB4EE;"></i> ${sub.phone}</p>
+                    <p style="margin: 0; color: #666;"><i class="fas fa-envelope" style="width: 20px; color: ${borderColor};"></i> ${sub.email}</p>
+                    <p style="margin: 0; color: #666;"><i class="fas fa-phone" style="width: 20px; color: ${borderColor};"></i> ${sub.phone}</p>
                 </div>
-                <p style="margin: 0 0 8px 0; color: #666;"><i class="fas fa-tag" style="width: 20px; color: #6CB4EE;"></i> <strong>Subject:</strong> ${sub.subject}</p>
-                <p style="margin: 0; color: #555; background: #fff; padding: 12px; border-radius: 8px;"><i class="fas fa-comment" style="width: 20px; color: #6CB4EE;"></i> ${sub.message}</p>
+                ${sub.subject ? `<p style="margin: 0 0 8px 0; color: #666;"><i class="fas fa-tag" style="width: 20px; color: ${borderColor};"></i> <strong>Subject:</strong> ${sub.subject}</p>` : ''}
+                ${extraInfo}
+                <p style="margin: ${isConsultant ? '10px 0 0 0' : '0'}; color: #555; background: #fff; padding: 12px; border-radius: 8px;"><i class="fas fa-comment" style="width: 20px; color: ${borderColor};"></i> ${sub.message}</p>
             `;
             contactList.appendChild(div);
         });
