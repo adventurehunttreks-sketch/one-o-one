@@ -422,18 +422,18 @@
             <div class="content-section" id="section-courses">
                 <div class="section-header">
                     <h2>Manage Courses</h2>
-                    <button class="btn btn-primary btn-sm" id="addCourseBtn"><i class="fas fa-plus"></i> Add Course</button>
+                    <button class="btn btn-primary btn-sm" id="addCourseBtn"><i class="fas fa-plus"></i> Add New Course</button>
                 </div>
-                <div class="items-list" id="coursesList"></div>
+                <div id="coursesList"></div>
             </div>
 
             <!-- Sales -->
             <div class="content-section" id="section-sales">
                 <div class="section-header">
                     <h2>Manage Sales Items</h2>
-                    <button class="btn btn-primary btn-sm" id="addSaleBtn"><i class="fas fa-plus"></i> Add Item</button>
+                    <button class="btn btn-primary btn-sm" id="addSaleBtn"><i class="fas fa-plus"></i> Add New Item</button>
                 </div>
-                <div class="items-list" id="salesList"></div>
+                <div id="salesList"></div>
             </div>
 
             <!-- Team -->
@@ -677,20 +677,46 @@
         function loadCourses() {
             const courses = getData('courses');
             document.getElementById('coursesList').innerHTML = courses.map(c => `
-                <div class="item-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div>
-                            <h4>${c.name}</h4>
-                            <p>Duration: ${c.duration} | Price: ${c.price}</p>
-                            <p>${c.desc}</p>
-                            ${c.features ? `<p>Features: ${c.features.join(', ')}</p>` : ''}
+                <div class="item-card" style="margin-bottom:15px; border-left-color:${c.id === 3 ? '#E8A849' : '#6CB4EE'};">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:16px;">${c.name} ${c.id === 3 ? '<span style="background:#E8A849;color:#fff;padding:2px 8px;border-radius:10px;font-size:10px;">Popular</span>' : ''}</h4>
+                            <div class="form-row" style="margin-top:10px;">
+                                <div class="form-group" style="margin-bottom:8px;">
+                                    <label style="font-size:11px;">Course Name</label>
+                                    <input type="text" value="${c.name}" onchange="updateCourse(${c.id}, 'name', this.value)" style="padding:6px 10px; font-size:13px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom:8px;">
+                                    <label style="font-size:11px;">Duration</label>
+                                    <input type="text" value="${c.duration}" onchange="updateCourse(${c.id}, 'duration', this.value)" style="padding:6px 10px; font-size:13px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom:8px;">
+                                    <label style="font-size:11px;">Price</label>
+                                    <input type="text" value="${c.price}" onchange="updateCourse(${c.id}, 'price', this.value)" style="padding:6px 10px; font-size:13px;">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:8px;">
+                                <label style="font-size:11px;">Description</label>
+                                <textarea onchange="updateCourse(${c.id}, 'desc', this.value)" style="padding:6px 10px; font-size:13px; width:100%; border:1px solid #ddd; border-radius:6px;" rows="2">${c.desc}</textarea>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:11px;">Features (comma separated)</label>
+                                <input type="text" value="${c.features ? c.features.join(', ') : ''}" onchange="updateCourse(${c.id}, 'features', this.value.split(',').map(f=>f.trim()))" style="padding:6px 10px; font-size:13px; width:100%;">
+                            </div>
                         </div>
-                        <div class="item-actions">
-                            <button class="btn btn-danger btn-sm" onclick="deleteCourse(${c.id})">Delete</button>
-                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="deleteCourse(${c.id})" style="margin-left:15px;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function updateCourse(id, field, value) {
+            let courses = getData('courses');
+            const course = courses.find(c => c.id === id);
+            if (course) {
+                course[field] = value;
+                saveData('courses', courses);
+            }
         }
 
         function deleteCourse(id) {
@@ -702,13 +728,15 @@
         }
 
         document.getElementById('addCourseBtn').addEventListener('click', () => {
-            const name = prompt('Course name:');
-            if (!name) return;
-            const duration = prompt('Duration:');
-            const price = prompt('Price:');
-            const desc = prompt('Description:');
             let courses = getData('courses');
-            courses.push({ id: Date.now(), name, duration: duration || 'TBD', price: price || 'Contact', desc: desc || '', features: [] });
+            courses.push({ 
+                id: Date.now(), 
+                name: 'New Course', 
+                duration: '10 Days', 
+                price: 'NPR 10,000', 
+                desc: 'Course description here...', 
+                features: ['Feature 1', 'Feature 2', 'Feature 3'] 
+            });
             saveData('courses', courses);
             loadCourses();
         });
@@ -717,19 +745,48 @@
         function loadSales() {
             const sales = getData('sales');
             document.getElementById('salesList').innerHTML = sales.map(s => `
-                <div class="item-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div>
-                            <h4>${s.name}</h4>
-                            <p>${s.desc}</p>
-                            <p>Link: ${s.link}</p>
+                <div class="item-card" style="margin-bottom:15px; border-left-color:${s.id === 2 ? '#28a745' : '#6CB4EE'};">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:16px;">${s.name} ${s.id === 2 ? '<span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:10px;font-size:10px;">Best Seller</span>' : ''}</h4>
+                            <div class="form-row" style="margin-top:10px;">
+                                <div class="form-group" style="margin-bottom:8px;">
+                                    <label style="font-size:11px;">Item Name</label>
+                                    <input type="text" value="${s.name}" onchange="updateSale(${s.id}, 'name', this.value)" style="padding:6px 10px; font-size:13px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom:8px;">
+                                    <label style="font-size:11px;">Page Link</label>
+                                    <input type="text" value="${s.link}" onchange="updateSale(${s.id}, 'link', this.value)" style="padding:6px 10px; font-size:13px;">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:11px;">Description</label>
+                                <textarea onchange="updateSale(${s.id}, 'desc', this.value)" style="padding:6px 10px; font-size:13px; width:100%; border:1px solid #ddd; border-radius:6px;" rows="2">${s.desc}</textarea>
+                            </div>
+                            ${s.features ? `
+                            <div class="form-group" style="margin-top:8px; margin-bottom:0;">
+                                <label style="font-size:11px;">Features (comma separated)</label>
+                                <input type="text" value="${s.features.join(', ')}" onchange="updateSale(${s.id}, 'features', this.value.split(',').map(f=>f.trim()))" style="padding:6px 10px; font-size:13px; width:100%;">
+                            </div>` : ''}
+                            ${s.price ? `
+                            <div class="form-group" style="margin-top:8px; margin-bottom:0;">
+                                <label style="font-size:11px;">Price</label>
+                                <input type="text" value="${s.price}" onchange="updateSale(${s.id}, 'price', this.value)" style="padding:6px 10px; font-size:13px; width:100%;">
+                            </div>` : ''}
                         </div>
-                        <div class="item-actions">
-                            <button class="btn btn-danger btn-sm" onclick="deleteSale(${s.id})">Delete</button>
-                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="deleteSale(${s.id})" style="margin-left:15px;"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function updateSale(id, field, value) {
+            let sales = getData('sales');
+            const sale = sales.find(s => s.id === id);
+            if (sale) {
+                sale[field] = value;
+                saveData('sales', sales);
+            }
         }
 
         function deleteSale(id) {
@@ -741,12 +798,15 @@
         }
 
         document.getElementById('addSaleBtn').addEventListener('click', () => {
-            const name = prompt('Item name:');
-            if (!name) return;
-            const desc = prompt('Description:');
-            const link = prompt('Page link (e.g., machines.html):');
             let sales = getData('sales');
-            sales.push({ id: Date.now(), name, desc: desc || '', link: link || '#' });
+            sales.push({ 
+                id: Date.now(), 
+                name: 'New Sales Item', 
+                desc: 'Item description here...', 
+                link: '#',
+                features: ['Feature 1', 'Feature 2'],
+                price: 'Contact for pricing'
+            });
             saveData('sales', sales);
             loadSales();
         });
