@@ -1230,6 +1230,73 @@ body {
     width: 100%;
 }
 
+/* Beans Showcase */
+.beans-showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.beans-image img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.beans-details {
+    position: relative;
+}
+
+.beans-details h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.beans-desc {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.bean-price-large {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.price-note {
+    color: #888;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.beans-details .bean-options {
+    margin-bottom: 20px;
+}
+
+.beans-details .product-features {
+    margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+    .beans-showcase {
+        grid-template-columns: 1fr;
+    }
+    
+    .beans-image img {
+        height: 300px;
+    }
+}
+
 /* Courses Section */
 .courses {
     padding: 100px 0;
