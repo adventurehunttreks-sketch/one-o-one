@@ -609,6 +609,7 @@
         </main>
     </div>
 
+    <script src="db.js"></script>
     <script>
         // Auth
         let password = localStorage.getItem('adminPass') || 'admin123';
@@ -726,13 +727,15 @@
             document.getElementById('hero-btn').value = data.btn;
         }
 
-        document.getElementById('saveHero').addEventListener('click', () => {
-            saveData('hero', {
+        document.getElementById('saveHero').addEventListener('click', async () => {
+            const data = {
                 title: document.getElementById('hero-title').value,
                 subtitle: document.getElementById('hero-subtitle').value,
                 btn: document.getElementById('hero-btn').value
-            });
-            alert('Hero section saved!');
+            };
+            saveData('hero', data);
+            await dbSave('hero', data);
+            alert('Hero section saved to cloud!');
         });
 
         // Load About
@@ -746,16 +749,18 @@
             document.getElementById('about-centers').value = data.centers;
         }
 
-        document.getElementById('saveAbout').addEventListener('click', () => {
-            saveData('about', {
+        document.getElementById('saveAbout').addEventListener('click', async () => {
+            const data = {
                 title: document.getElementById('about-title').value,
                 subtitle: document.getElementById('about-subtitle').value,
                 desc: document.getElementById('about-desc').value,
                 year: document.getElementById('about-year').value,
                 students: document.getElementById('about-students').value,
                 centers: document.getElementById('about-centers').value
-            });
-            alert('About section saved!');
+            };
+            saveData('about', data);
+            await dbSave('about', data);
+            alert('About section saved to cloud!');
         });
 
         // Load Content
@@ -771,8 +776,8 @@
             document.getElementById('gen-loc2').value = data.loc2;
         }
 
-        document.getElementById('saveContent').addEventListener('click', () => {
-            saveData('content', {
+        document.getElementById('saveContent').addEventListener('click', async () => {
+            const data = {
                 phone1: document.getElementById('gen-phone1').value,
                 phone2: document.getElementById('gen-phone2').value,
                 email: document.getElementById('gen-email').value,
@@ -781,8 +786,10 @@
                 tiktok: document.getElementById('gen-tiktok').value,
                 loc1: document.getElementById('gen-loc1').value,
                 loc2: document.getElementById('gen-loc2').value
-            });
-            alert('Content saved!');
+            };
+            saveData('content', data);
+            await dbSave('content', data);
+            alert('Content saved to cloud!');
         });
 
         // Load Courses
@@ -837,12 +844,13 @@
             const file = input.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 let courses = getData('courses');
                 const course = courses.find(c => c.id === id);
                 if (course) {
                     course.image = e.target.result;
                     saveData('courses', courses);
+                    await dbSave('courses', courses);
                     loadCourses();
                 }
             };
@@ -855,6 +863,7 @@
             if (course) {
                 course[field] = value;
                 saveData('courses', courses);
+                dbSave('courses', courses);
             }
         }
 
@@ -863,21 +872,23 @@
             let courses = getData('courses');
             courses = courses.filter(c => c.id !== id);
             saveData('courses', courses);
+            dbSave('courses', courses);
             loadCourses();
         }
 
-        document.getElementById('addCourseBtn').addEventListener('click', () => {
+        document.getElementById('addCourseBtn').addEventListener('click', async () => {
             let courses = getData('courses');
             courses.push({ 
                 id: Date.now(), 
                 name: 'New Course', 
-                duration: '10 Days', 
+                duration: '10 Days',  
                 price: 'NPR 10,000', 
                 desc: 'Course description here...', 
                 features: ['Feature 1', 'Feature 2', 'Feature 3'],
                 image: ''
             });
             saveData('courses', courses);
+            dbSave('courses', courses);
             loadCourses();
         });
 
@@ -935,12 +946,13 @@
             const file = input.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 let sales = getData('sales');
                 const sale = sales.find(s => s.id === id);
                 if (sale) {
                     sale.image = e.target.result;
                     saveData('sales', sales);
+                    await dbSave('sales', sales);
                     loadSales();
                 }
             };
@@ -953,6 +965,7 @@
             if (sale) {
                 sale[field] = value;
                 saveData('sales', sales);
+                dbSave('sales', sales);
             }
         }
 
@@ -961,10 +974,11 @@
             let sales = getData('sales');
             sales = sales.filter(s => s.id !== id);
             saveData('sales', sales);
+            dbSave('sales', sales);
             loadSales();
         }
 
-        document.getElementById('addSaleBtn').addEventListener('click', () => {
+        document.getElementById('addSaleBtn').addEventListener('click', async () => {
             let sales = getData('sales');
             sales.push({ 
                 id: Date.now(), 
@@ -976,6 +990,7 @@
                 image: ''
             });
             saveData('sales', sales);
+            await dbSave('sales', sales);
             loadSales();
         });
 
@@ -1035,12 +1050,13 @@
             const file = input.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
                 const member = team.find(t => t.id === id);
                 if (member) {
                     member.photo = e.target.result;
                     localStorage.setItem('teamMembers', JSON.stringify(team));
+                    await dbSave('team', team);
                     loadTeam();
                     loadDashboard();
                 }
@@ -1054,6 +1070,7 @@
             if (member) {
                 member[field] = value;
                 localStorage.setItem('teamMembers', JSON.stringify(team));
+                dbSave('team', team);
             }
         }
 
@@ -1062,11 +1079,12 @@
             let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
             team = team.filter(t => t.id !== id);
             localStorage.setItem('teamMembers', JSON.stringify(team));
+            dbSave('team', team);
             loadTeam();
             loadDashboard();
         }
 
-        document.getElementById('addTeamBtn').addEventListener('click', () => {
+        document.getElementById('addTeamBtn').addEventListener('click', async () => {
             let team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
             const newMember = { 
                 id: Date.now(), 
@@ -1079,6 +1097,7 @@
             };
             team.push(newMember);
             localStorage.setItem('teamMembers', JSON.stringify(team));
+            await dbSave('team', team);
             loadTeam();
             loadDashboard();
         });
@@ -1104,6 +1123,7 @@
             let gallery = JSON.parse(localStorage.getItem('galleryImages') || '[]');
             gallery.splice(index, 1);
             localStorage.setItem('galleryImages', JSON.stringify(gallery));
+            dbSave('gallery', gallery);
             loadGallery();
             loadDashboard();
         }
@@ -1116,11 +1136,12 @@
                 const file = e.target.files[0];
                 if (!file) return;
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = async function(event) {
                     const cat = prompt('Category (training/coffee/events):') || 'training';
                     let gallery = JSON.parse(localStorage.getItem('galleryImages') || '[]');
                     gallery.push({ url: event.target.result, category: cat });
                     localStorage.setItem('galleryImages', JSON.stringify(gallery));
+                    await dbSave('gallery', gallery);
                     loadGallery();
                     loadDashboard();
                 };
@@ -1137,13 +1158,15 @@
             document.getElementById('contact-map').value = data.map;
         }
 
-        document.getElementById('saveContact').addEventListener('click', () => {
-            saveData('contact', {
+        document.getElementById('saveContact').addEventListener('click', async () => {
+            const data = {
                 title: document.getElementById('contact-title').value,
                 desc: document.getElementById('contact-desc').value,
                 map: document.getElementById('contact-map').value
-            });
-            alert('Contact section saved!');
+            };
+            saveData('contact', data);
+            await dbSave('contact', data);
+            alert('Contact section saved to cloud!');
         });
 
         // Load Submissions
@@ -1208,14 +1231,16 @@
             if (order) {
                 order.status = status;
                 localStorage.setItem('orders', JSON.stringify(orders));
+                dbSave('orders', orders);
                 loadOrders();
                 loadDashboard();
             }
         }
 
-        document.getElementById('clearOrdersBtn').addEventListener('click', () => {
+        document.getElementById('clearOrdersBtn').addEventListener('click', async () => {
             if (!confirm('Clear all orders?')) return;
             localStorage.removeItem('orders');
+            await dbSave('orders', []);
             loadOrders();
             loadDashboard();
         });
@@ -1228,13 +1253,15 @@
             document.getElementById('footer-sister-url').value = data.sisterUrl;
         }
 
-        document.getElementById('saveFooter').addEventListener('click', () => {
-            saveData('footer', {
+        document.getElementById('saveFooter').addEventListener('click', async () => {
+            const data = {
                 copyright: document.getElementById('footer-copyright').value,
                 sisterName: document.getElementById('footer-sister-name').value,
                 sisterUrl: document.getElementById('footer-sister-url').value
-            });
-            alert('Footer saved!');
+            };
+            saveData('footer', data);
+            await dbSave('footer', data);
+            alert('Footer saved to cloud!');
         });
 
         // Settings
@@ -1264,20 +1291,36 @@
             location.reload();
         });
 
-        // Initialize All
-        initGallery();
-        loadDashboard();
-        loadHero();
-        loadAbout();
-        loadContent();
-        loadCourses();
-        loadSales();
-        loadTeam();
-        loadGallery();
-        loadContact();
-        loadSubmissions();
-        loadOrders();
-        loadFooter();
+        // Initialize All - Load from cloud database
+        async function initAdmin() {
+            // Wait for database to be ready
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Load from database
+            const allData = await dbGetAll();
+            if (allData) {
+                // Save to localStorage as cache
+                Object.keys(allData).forEach(key => {
+                    localStorage.setItem('site_' + key, JSON.stringify(allData[key]));
+                });
+            }
+            
+            initGallery();
+            loadDashboard();
+            loadHero();
+            loadAbout();
+            loadContent();
+            loadCourses();
+            loadSales();
+            loadTeam();
+            loadGallery();
+            loadContact();
+            loadSubmissions();
+            loadOrders();
+            loadFooter();
+        }
+        
+        initAdmin();
     </script>
 </body>
 </html>

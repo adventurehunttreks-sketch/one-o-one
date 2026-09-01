@@ -371,6 +371,73 @@ if ('IntersectionObserver' in window) {
 }
 
 // Load Team from localStorage on page load
+function loadHeroFromStorage() {
+    const data = JSON.parse(localStorage.getItem('site_hero') || '{}');
+    if (!data.title) return;
+    
+    const heroTitle = document.querySelector('.hero-content h1');
+    const heroSubtitle = document.querySelector('.hero-content p');
+    const heroBtn = document.querySelector('.hero-content .btn');
+    
+    if (heroTitle) heroTitle.textContent = data.title;
+    if (heroSubtitle) heroSubtitle.textContent = data.subtitle;
+    if (heroBtn && data.btn) heroBtn.textContent = data.btn;
+}
+
+function loadAboutFromStorage() {
+    const data = JSON.parse(localStorage.getItem('site_about') || '{}');
+    if (!data.title) return;
+    
+    const aboutTitle = document.querySelector('#about h2');
+    const aboutSubtitle = document.querySelector('#about .section-subtitle');
+    const aboutDesc = document.querySelector('#about .about-text p');
+    const stats = document.querySelectorAll('#about .stat');
+    
+    if (aboutTitle) aboutTitle.textContent = data.title;
+    if (aboutSubtitle) aboutSubtitle.textContent = data.subtitle;
+    if (aboutDesc) aboutDesc.textContent = data.desc;
+    if (stats.length >= 3) {
+        if (data.year) stats[0].querySelector('h3').textContent = data.year;
+        if (data.students) stats[1].querySelector('h3').textContent = data.students;
+        if (data.centers) stats[2].querySelector('h3').textContent = data.centers;
+    }
+}
+
+function loadContentFromStorage() {
+    const data = JSON.parse(localStorage.getItem('site_content') || '{}');
+    if (!data.phone1) return;
+    
+    // Update phone numbers
+    document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+        const text = el.textContent.trim();
+        if (text && data.phone1) el.textContent = data.phone1;
+    });
+    
+    // Update email
+    document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+        if (data.email) el.textContent = data.email;
+    });
+}
+
+function loadContactFromStorage() {
+    const data = JSON.parse(localStorage.getItem('site_contact') || '{}');
+    // Contact section content loaded if needed
+}
+
+function loadFooterFromStorage() {
+    const data = JSON.parse(localStorage.getItem('site_footer') || '{}');
+    if (!data.copyright) return;
+    
+    const copyright = document.querySelector('footer p');
+    const sisterLink = document.querySelector('footer a[href*="paakshala"]');
+    
+    if (copyright) copyright.textContent = data.copyright;
+    if (sisterLink) {
+        sisterLink.textContent = data.sisterName;
+        sisterLink.href = data.sisterUrl;
+    }
+}
+
 function loadTeamFromStorage() {
     const defaultTeam = [
         { id: 1, name: 'Team Member 1', role: 'Head Barista', photo: 'photos1.jpg', facebook: '', instagram: '' },
@@ -553,11 +620,28 @@ function bindLightbox() {
 }
 
 // Initialize all storage loading on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load from cloud database first
+    if (typeof dbGetAll === 'function') {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const allData = await dbGetAll();
+        if (allData) {
+            Object.keys(allData).forEach(key => {
+                if (key !== 'orders' && key !== 'submissions') {
+                    localStorage.setItem('site_' + key, JSON.stringify(allData[key]));
+                }
+            });
+        }
+    }
+    
     loadTeamFromStorage();
     loadContentFromStorage();
     loadGalleryFromStorage();
     loadCoursesFromStorage();
+    loadHeroFromStorage();
+    loadAboutFromStorage();
+    loadContactFromStorage();
+    loadFooterFromStorage();
 });
 
 console.log('One O One Coffee & Barista School - Website Loaded Successfully!');
