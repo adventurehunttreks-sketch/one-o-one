@@ -30,9 +30,11 @@ async function initDB() {
             { id: 3, name: 'Consultant Services', desc: 'Expert cafe setup consulting and business planning.', link: 'consultant.html', features: ['Cafe Setup', 'Menu Development', 'Equipment Selection', 'Business Planning'] }
         ],
         team: [
-            { id: 1, name: 'Team Member 1', role: 'Head Barista', photo: 'photos1.jpg', facebook: '', instagram: '', desc: '' },
-            { id: 2, name: 'Team Member 2', role: 'Coffee Trainer', photo: 'photos2.jpg', facebook: '', instagram: '', desc: '' },
-            { id: 3, name: 'Team Member 3', role: 'Latte Art Expert', photo: 'photos3.jpg', facebook: '', instagram: '', desc: '' }
+            { id: 1, name: 'CEO', role: 'CEO & Training Director', photo: 'photos1.jpg', facebook: '', instagram: '', desc: '' },
+            { id: 2, name: 'Head Barista', role: 'Head Barista & Trainer', photo: 'photos2.jpg', facebook: '', instagram: '', desc: '' },
+            { id: 3, name: 'Head Barista & Trainer', role: 'Trainer', photo: 'photos3.jpg', facebook: '', instagram: '', desc: '' },
+            { id: 4, name: 'Coffee Expert', role: 'Coffee Quality Expert', photo: 'photos4.jpg', facebook: '', instagram: '', desc: '' },
+            { id: 5, name: 'Head Barista and Trainer', role: 'Trainer', photo: 'photos5.jpg', facebook: '', instagram: '', desc: '' }
         ],
         gallery: [
             { url: 'photos1.jpg', category: 'training' },

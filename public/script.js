@@ -440,9 +440,11 @@ function loadFooterFromStorage() {
 
 function loadTeamFromStorage() {
     const defaultTeam = [
-        { id: 1, name: 'Team Member 1', role: 'Head Barista', photo: 'photos1.jpg', facebook: '', instagram: '' },
-        { id: 2, name: 'Team Member 2', role: 'Coffee Trainer', photo: 'photos2.jpg', facebook: '', instagram: '' },
-        { id: 3, name: 'Team Member 3', role: 'Latte Art Expert', photo: 'photos3.jpg', facebook: '', instagram: '' }
+        { id: 1, name: 'CEO', role: 'CEO & Training Director', photo: 'photos1.jpg', facebook: '', instagram: '', desc: '' },
+        { id: 2, name: 'Head Barista', role: 'Head Barista & Trainer', photo: 'photos2.jpg', facebook: '', instagram: '', desc: '' },
+        { id: 3, name: 'Head Barista & Trainer', role: 'Trainer', photo: 'photos3.jpg', facebook: '', instagram: '', desc: '' },
+        { id: 4, name: 'Coffee Expert', role: 'Coffee Quality Expert', photo: 'photos4.jpg', facebook: '', instagram: '', desc: '' },
+        { id: 5, name: 'Head Barista and Trainer', role: 'Trainer', photo: 'photos5.jpg', facebook: '', instagram: '', desc: '' }
     ];
     
     const team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
