@@ -572,6 +572,39 @@
             footer: { copyright: '2026 One O One Coffee & Barista School. All Rights Reserved.', sisterName: 'Paakshala Academy of Hospitality', sisterUrl: 'https://paakshala.edu.np' }
         };
 
+        // Default gallery images from website
+        const defaultGallery = [
+            { url: 'photos1.jpg', category: 'training' },
+            { url: 'photos2.jpg', category: 'training' },
+            { url: 'photos3.jpg', category: 'training' },
+            { url: 'photos5.jpg', category: 'training' },
+            { url: 'photos6.jpg', category: 'training' },
+            { url: 'photos7.jpg', category: 'coffee' },
+            { url: 'photos8.jpg', category: 'coffee' },
+            { url: 'photos9.jpg', category: 'coffee' },
+            { url: 'photos50.jpg', category: 'events' },
+            { url: 'photos100.jpg', category: 'events' },
+            { url: 'latte.jpg', category: 'coffee' },
+            { url: 'espresso extraction.jpg', category: 'coffee' },
+            { url: 'temping.jpg', category: 'training' },
+            { url: 'machine.jpg', category: 'coffee' },
+            { url: 'drinks.jpg', category: 'coffee' },
+            { url: 'serving.jpg', category: 'coffee' },
+            { url: 'certificate distribution.jpg', category: 'events' },
+            { url: 'art.jpg', category: 'events' },
+            { url: 'farewellcake.jpg', category: 'events' },
+            { url: 'prize.jpg', category: 'events' },
+            { url: 'blue lagoon.jpg', category: 'coffee' }
+        ];
+
+        // Initialize gallery with defaults if empty
+        function initGallery() {
+            const gallery = localStorage.getItem('galleryImages');
+            if (!gallery || JSON.parse(gallery).length === 0) {
+                localStorage.setItem('galleryImages', JSON.stringify(defaultGallery));
+            }
+        }
+
         function getData(key) {
             return JSON.parse(localStorage.getItem('site_' + key) || 'null') || defaultData[key];
         }
@@ -1153,6 +1186,7 @@
         });
 
         // Initialize All
+        initGallery();
         loadDashboard();
         loadHero();
         loadAbout();

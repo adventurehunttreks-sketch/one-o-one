@@ -398,24 +398,55 @@ function loadTeamFromStorage() {
 
 // Load Content from localStorage on page load
 function loadContentFromStorage() {
-    const content = JSON.parse(localStorage.getItem('siteContent') || '{}');
-    if (Object.keys(content).length === 0) return;
+    // Load from admin's storage keys
+    const hero = JSON.parse(localStorage.getItem('site_hero') || '{}');
+    const about = JSON.parse(localStorage.getItem('site_about') || '{}');
+    const content = JSON.parse(localStorage.getItem('site_content') || '{}');
 
-    if (content.heroTitle) {
+    // Hero section
+    if (hero.title) {
         const heroTitle = document.querySelector('.hero-content h1');
-        if (heroTitle) heroTitle.textContent = content.heroTitle;
+        if (heroTitle) heroTitle.textContent = hero.title;
     }
-    if (content.heroSubtitle) {
+    if (hero.subtitle) {
         const heroSubtitle = document.querySelector('.hero-content p');
-        if (heroSubtitle) heroSubtitle.textContent = content.heroSubtitle;
+        if (heroSubtitle) heroSubtitle.textContent = hero.subtitle;
     }
-    if (content.aboutTitle) {
+
+    // About section
+    if (about.title) {
         const aboutTitle = document.querySelector('.about-text h3');
-        if (aboutTitle) aboutTitle.textContent = content.aboutTitle;
+        if (aboutTitle) aboutTitle.textContent = about.title;
     }
-    if (content.aboutText) {
+    if (about.desc) {
         const aboutText = document.querySelector('.about-text p');
-        if (aboutText) aboutText.textContent = content.aboutText;
+        if (aboutText) aboutText.textContent = about.desc;
+    }
+    if (about.year) {
+        const yearEl = document.querySelector('.stat-number');
+        if (yearEl) yearEl.textContent = about.year;
+    }
+    if (about.students) {
+        const statNums = document.querySelectorAll('.stat-number');
+        if (statNums[1]) statNums[1].textContent = about.students;
+    }
+    if (about.centers) {
+        const statNums = document.querySelectorAll('.stat-number');
+        if (statNums[2]) statNums[2].textContent = about.centers;
+    }
+
+    // Phone and email
+    if (content.phone1) {
+        const phoneEls = document.querySelectorAll('.contact-info li');
+        if (phoneEls[0]) phoneEls[0].innerHTML = `<i class="fas fa-phone"></i> ${content.phone1}`;
+    }
+    if (content.phone2) {
+        const phoneEls = document.querySelectorAll('.contact-info li');
+        if (phoneEls[1]) phoneEls[1].innerHTML = `<i class="fas fa-phone"></i> ${content.phone2}`;
+    }
+    if (content.email) {
+        const emailEls = document.querySelectorAll('.contact-info li');
+        if (emailEls[2]) emailEls[2].innerHTML = `<i class="fas fa-envelope"></i> ${content.email}`;
     }
 }
 
@@ -433,8 +464,10 @@ function loadGalleryFromStorage() {
         const div = document.createElement('div');
         div.className = 'gallery-item';
         div.dataset.category = img.category;
+        const imgSrc = img.url || img.src;
+        const imgAlt = img.alt || img.category;
         div.innerHTML = `
-            <img src="${img.src}" alt="${img.alt}">
+            <img src="${imgSrc}" alt="${imgAlt}">
             <div class="gallery-overlay">
                 <i class="fas fa-search-plus"></i>
             </div>
@@ -448,7 +481,7 @@ function loadGalleryFromStorage() {
 
 // Load Courses from localStorage on page load
 function loadCoursesFromStorage() {
-    const courses = JSON.parse(localStorage.getItem('courses') || '[]');
+    const courses = JSON.parse(localStorage.getItem('site_courses') || localStorage.getItem('courses') || '[]');
     if (courses.length === 0) return;
 
     const coursesGrid = document.getElementById('coursesGrid');
@@ -461,12 +494,11 @@ function loadCoursesFromStorage() {
         const div = document.createElement('div');
         div.className = `course-card ${isFeatured ? 'featured' : ''}`;
         div.dataset.course = course.id;
+        const iconClass = course.isFree ? 'fa-coffee' : index === 1 ? 'fa-fire' : index === 2 ? 'fa-award' : 'fa-user';
         div.innerHTML = `
             ${isFeatured ? '<div class="course-badge">Most Popular</div>' : ''}
             ${course.isFree ? '<div class="course-badge free">FREE</div>' : ''}
-            <div class="course-icon">
-                <i class="fas ${course.isFree ? 'fa-coffee' : index === 1 ? 'fa-fire' : index === 2 ? 'fa-award' : 'fa-user'}"></i>
-            </div>
+            ${course.image ? `<div class="course-image"><img src="${course.image}" alt="${course.name}"></div>` : `<div class="course-icon"><i class="fas ${iconClass}"></i></div>`}
             <h3>${course.name}</h3>
             <p>${course.desc}</p>
             <div class="course-meta">
@@ -474,7 +506,7 @@ function loadCoursesFromStorage() {
                 <span class="course-price ${course.isFree ? 'free-price' : ''}">${course.price}</span>
             </div>
             <ul class="course-features">
-                ${course.features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
+                ${(course.features || []).map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
             </ul>
             <a href="#contact" class="btn btn-primary">${course.isFree ? 'Join Free Class' : 'Enroll Now'}</a>
         `;
