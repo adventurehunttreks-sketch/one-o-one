@@ -685,9 +685,9 @@
             }
         }
 
-        function saveData(key, data) {
+        async function saveData(key, data) {
             // Save to cloud only
-            dbSave(key, data);
+            await dbSave(key, data);
         }
 
         async function getData(key) {
@@ -734,8 +734,7 @@
                 subtitle: document.getElementById('hero-subtitle').value,
                 btn: document.getElementById('hero-btn').value
             };
-            saveData('hero', data);
-            await dbSave('hero', data);
+            await saveData('hero', data);
             alert('Hero section saved to cloud!');
         });
 
@@ -759,8 +758,7 @@
                 students: document.getElementById('about-students').value,
                 centers: document.getElementById('about-centers').value
             };
-            saveData('about', data);
-            await dbSave('about', data);
+            await saveData('about', data);
             alert('About section saved to cloud!');
         });
 
@@ -788,8 +786,7 @@
                 loc1: document.getElementById('gen-loc1').value,
                 loc2: document.getElementById('gen-loc2').value
             };
-            saveData('content', data);
-            await dbSave('content', data);
+            await saveData('content', data);
             alert('Content saved to cloud!');
         });
 
@@ -1085,8 +1082,7 @@
                 desc: document.getElementById('contact-desc').value,
                 map: document.getElementById('contact-map').value
             };
-            saveData('contact', data);
-            await dbSave('contact', data);
+            await saveData('contact', data);
             alert('Contact section saved to cloud!');
         });
 
@@ -1183,8 +1179,7 @@
                 sisterName: document.getElementById('footer-sister-name').value,
                 sisterUrl: document.getElementById('footer-sister-url').value
             };
-            saveData('footer', data);
-            await dbSave('footer', data);
+            await saveData('footer', data);
             alert('Footer saved to cloud!');
         });
 

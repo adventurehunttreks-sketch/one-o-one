@@ -67,14 +67,9 @@ async function dbSave(section, data) {
         
         const result = await response.json();
         
-        // Also save to localStorage as backup
-        localStorage.setItem('site_' + section, JSON.stringify(data));
-        
         return result.success;
     } catch (error) {
         console.error('Error saving section:', error);
-        // Fallback to localStorage
-        localStorage.setItem('site_' + section, JSON.stringify(data));
         return false;
     }
 }
@@ -93,18 +88,9 @@ async function dbSaveAll(allData) {
         
         const result = await response.json();
         
-        // Also save to localStorage as backup
-        Object.keys(allData).forEach(key => {
-            localStorage.setItem('site_' + key, JSON.stringify(allData[key]));
-        });
-        
         return result.success;
     } catch (error) {
         console.error('Error saving all data:', error);
-        // Fallback to localStorage
-        Object.keys(allData).forEach(key => {
-            localStorage.setItem('site_' + key, JSON.stringify(allData[key]));
-        });
         return false;
     }
 }
