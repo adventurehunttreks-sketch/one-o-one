@@ -13,6 +13,7 @@ const AdminPanel = {
         this.loadCourses();
         this.loadSales();
         this.loadContacts();
+        this.loadOrders();
     },
 
     bindEvents() {
@@ -48,6 +49,9 @@ const AdminPanel = {
 
         // Contacts management
         document.getElementById('clearContacts')?.addEventListener('click', () => this.clearContacts());
+
+        // Orders management
+        document.getElementById('clearOrders')?.addEventListener('click', () => this.clearOrders());
 
         // Add image
         document.getElementById('addImage')?.addEventListener('click', () => this.addImage());
@@ -873,6 +877,104 @@ const AdminPanel = {
         alert('All contact submissions have been cleared.');
     },
 
+    // Order Management Functions
+    loadOrders() {
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        const ordersList = document.getElementById('ordersList');
+        if (!ordersList) return;
+
+        if (orders.length === 0) {
+            ordersList.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">No orders yet.</p>';
+            return;
+        }
+
+        ordersList.innerHTML = '';
+        orders.forEach((order, index) => {
+            const date = new Date(order.date);
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const paymentMethods = { 'cod': 'Cash on Delivery', 'esewa': 'eSewa', 'khalti': 'Khalti', 'bank': 'Bank Transfer' };
+            const statusColors = { 'pending': '#ffc107', 'confirmed': '#17a2b8', 'shipped': '#6f42c1', 'delivered': '#28a745' };
+            
+            const div = document.createElement('div');
+            div.className = 'admin-order-item';
+            div.style.cssText = `background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid ${statusColors[order.status] || '#ffc107'};`;
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <strong style="font-size: 16px; color: #333;">${order.name}</strong>
+                    <span style="color: #888; font-size: 12px;">${formattedDate}</span>
+                </div>
+                <div style="background: #fff; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #666;">Product:</span>
+                        <strong>${order.product}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #666;">Roast:</span>
+                        <span>${order.roast}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #666;">Quantity:</span>
+                        <span>${order.quantity} kg</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #666;">Unit Price:</span>
+                        <span>NPR ${order.unitPrice}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 8px; margin-top: 8px;">
+                        <strong>Total:</strong>
+                        <strong style="color: #28a745; font-size: 18px;">NPR ${order.total}</strong>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                    <p style="margin: 0; color: #666;"><i class="fas fa-envelope" style="width: 20px; color: #6CB4EE;"></i> ${order.email}</p>
+                    <p style="margin: 0; color: #666;"><i class="fas fa-phone" style="width: 20px; color: #6CB4EE;"></i> ${order.phone}</p>
+                </div>
+                <p style="margin: 0 0 8px 0; color: #666;"><i class="fas fa-map-marker-alt" style="width: 20px; color: #6CB4EE;"></i> ${order.address}</p>
+                <p style="margin: 0 0 8px 0; color: #666;"><i class="fas fa-credit-card" style="width: 20px; color: #6CB4EE;"></i> Payment: ${paymentMethods[order.payment] || order.payment}</p>
+                ${order.notes ? `<p style="margin: 0; color: #666; background: #fff; padding: 10px; border-radius: 8px;"><i class="fas fa-sticky-note" style="width: 20px; color: #6CB4EE;"></i> Notes: ${order.notes}</p>` : ''}
+                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                    <select class="order-status-select" data-order-id="${order.id}" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 12px;">
+                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                    </select>
+                </div>
+            `;
+            ordersList.appendChild(div);
+        });
+
+        document.querySelectorAll('.order-status-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                this.updateOrderStatus(e.target.dataset.orderId, e.target.value);
+            });
+        });
+    },
+
+    updateOrderStatus(orderId, newStatus) {
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        const order = orders.find(o => o.id == orderId);
+        if (order) {
+            order.status = newStatus;
+            localStorage.setItem('orders', JSON.stringify(orders));
+            this.loadOrders();
+        }
+    },
+
+    clearOrders() {
+        if (!confirm('Are you sure you want to clear all orders?')) return;
+        localStorage.removeItem('orders');
+        this.loadOrders();
+        alert('All orders have been cleared.');
+    },
+
     changePassword() {
         const current = document.getElementById('currentPassword').value;
         const newPass = document.getElementById('newPassword').value;
@@ -911,6 +1013,8 @@ const AdminPanel = {
         localStorage.removeItem('teamMembers');
         localStorage.removeItem('courses');
         localStorage.removeItem('sales');
+        localStorage.removeItem('contactSubmissions');
+        localStorage.removeItem('orders');
         localStorage.removeItem('adminPass');
         
         this.password = 'admin123';
