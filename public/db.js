@@ -1,7 +1,7 @@
 // Cloud Database Helper - JSONBin.io
 const DB_CONFIG = {
     apiKey: '$2a$10$yfB3p0M4J5AEXjbPVzKtBuPhJAN5t.P4NkuiSKw6NC55bIMWn8c9K',
-    binId: null, // Will be created on first save
+    binId: '6a96b84dda38895dfe2a9fd8',
     baseUrl: 'https://api.jsonbin.io/v3'
 };
 
@@ -13,62 +13,9 @@ async function initDB() {
         return binId;
     }
     
-    // Create new bin with default data
-    const defaultData = {
-        hero: { title: 'Learn the Art of Coffee', subtitle: 'Professional Barista Training in Bhaktapur', btn: 'Explore Courses' },
-        about: { title: 'About Us', subtitle: 'Your Journey to Becoming a Professional Barista Starts Here', desc: 'One O One Coffee & Barista School is a premier coffee training institution located in Bhaktapur, Nepal. Founded in 2019, we have been committed to transforming coffee enthusiasts into skilled professionals.', year: '2019', students: '7,000+', centers: '3' },
-        content: { phone1: '9851316494', phone2: '9851165283', email: 'info@101coffee.com.np', facebook: 'https://www.facebook.com/101coffeeschool/', instagram: 'https://www.instagram.com/101coffeeandbaristaschool/', tiktok: 'https://www.tiktok.com/@101coffeeandbaristaschoo', loc1: 'Suryabinayak, Bhaktapur', loc2: 'Gatthaghar (Training School)' },
-        courses: [
-            { id: 1, name: 'Free Demo Class', duration: '1 Hour', price: 'FREE', desc: 'Experience our teaching style with a hands-on session.', features: ['Hands-on Experience', 'Meet Our Trainers', 'Tour Facilities', 'No Commitment'], isFree: true },
-            { id: 2, name: 'Basic to Advance', duration: '10 Days', price: 'NPR 10,000', desc: 'Complete barista training from basics to professional level.', features: ['Espresso Basics', 'Milk Steaming', 'Latte Art', 'Commercial Machine Training'] },
-            { id: 3, name: 'Advance Training', duration: '30 Days', price: 'NPR 18,000', desc: 'Master advanced techniques and business skills.', features: ['Advanced Latte Art', 'Coffee Business', 'Quality Control', 'Industry Certification'] },
-            { id: 4, name: 'Personal Coaching', duration: 'Flexible', price: 'Contact Us', desc: 'One-on-one personalized training at your own pace.', features: ['Custom Schedule', 'Individual Attention', 'Focus on Your Goals', 'Flexible Timing'] }
-        ],
-        sales: [
-            { id: 1, name: 'Machine & Equipment', desc: 'Professional coffee machines and tools for cafes and homes.', link: 'machines.html', features: ['Espresso Machines', 'Coffee Grinders', 'Brewing Equipment', 'Barista Tools'] },
-            { id: 2, name: 'Coffee Beans 1kg', desc: 'Premium roasted beans - NPR 2,500/kg', link: 'beans.html', features: ['Light Roast', 'Medium Roast', 'Dark Roast', 'Custom Blends'], price: 'NPR 2,500' },
-            { id: 3, name: 'Consultant Services', desc: 'Expert cafe setup consulting and business planning.', link: 'consultant.html', features: ['Cafe Setup', 'Menu Development', 'Equipment Selection', 'Business Planning'] }
-        ],
-        team: [
-            { id: 1, name: 'CEO', role: 'CEO & Training Director', photo: 'photos1.jpg', facebook: '', instagram: '', desc: '' },
-            { id: 2, name: 'Head Barista', role: 'Head Barista & Trainer', photo: 'photos2.jpg', facebook: '', instagram: '', desc: '' },
-            { id: 3, name: 'Head Barista & Trainer', role: 'Trainer', photo: 'photos3.jpg', facebook: '', instagram: '', desc: '' },
-            { id: 4, name: 'Coffee Expert', role: 'Coffee Quality Expert', photo: 'photos4.jpg', facebook: '', instagram: '', desc: '' },
-            { id: 5, name: 'Head Barista and Trainer', role: 'Trainer', photo: 'photos5.jpg', facebook: '', instagram: '', desc: '' }
-        ],
-        gallery: [
-            { url: 'photos1.jpg', category: 'training' },
-            { url: 'photos2.jpg', category: 'training' },
-            { url: 'photos3.jpg', category: 'training' },
-            { url: 'latte.jpg', category: 'coffee' },
-            { url: 'machine.jpg', category: 'coffee' },
-            { url: 'drinks.jpg', category: 'coffee' },
-            { url: 'art.jpg', category: 'events' }
-        ],
-        contact: { title: 'Get In Touch', desc: 'Have questions? We would love to hear from you.', map: '' },
-        footer: { copyright: '2026 One O One Coffee & Barista School. All Rights Reserved.', sisterName: 'Paakshala Academy of Hospitality', sisterUrl: 'https://paakshala.edu.np' },
-        orders: [],
-        submissions: []
-    };
-
-    try {
-        const response = await fetch(`${DB_CONFIG.baseUrl}/bin`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': DB_CONFIG.apiKey
-            },
-            body: JSON.stringify(defaultData)
-        });
-        
-        const result = await response.json();
-        DB_CONFIG.binId = result.metadata.id;
-        localStorage.setItem('db_bin_id', DB_CONFIG.binId);
-        return DB_CONFIG.binId;
-    } catch (error) {
-        console.error('Error creating bin:', error);
-        return null;
-    }
+    // Use existing bin ID from config
+    localStorage.setItem('db_bin_id', DB_CONFIG.binId);
+    return DB_CONFIG.binId;
 }
 
 // Get all data from database
