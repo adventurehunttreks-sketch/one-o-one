@@ -372,13 +372,21 @@ if ('IntersectionObserver' in window) {
 
 // Load Team from localStorage on page load
 function loadTeamFromStorage() {
+    const defaultTeam = [
+        { id: 1, name: 'Team Member 1', role: 'Head Barista', photo: 'photos1.jpg', facebook: '', instagram: '' },
+        { id: 2, name: 'Team Member 2', role: 'Coffee Trainer', photo: 'photos2.jpg', facebook: '', instagram: '' },
+        { id: 3, name: 'Team Member 3', role: 'Latte Art Expert', photo: 'photos3.jpg', facebook: '', instagram: '' }
+    ];
+    
     const team = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+    const teamToShow = team.length > 0 ? team : defaultTeam;
+    
     const teamGrid = document.getElementById('teamGrid');
-    if (!teamGrid || team.length === 0) return;
+    if (!teamGrid) return;
 
     teamGrid.innerHTML = '';
     
-    team.forEach(member => {
+    teamToShow.forEach(member => {
         const div = document.createElement('div');
         div.className = 'team-card';
         div.innerHTML = `
@@ -452,15 +460,25 @@ function loadContentFromStorage() {
 
 // Load Gallery from localStorage on page load
 function loadGalleryFromStorage() {
+    const defaultGallery = [
+        { url: 'photos1.jpg', category: 'training' },
+        { url: 'photos2.jpg', category: 'training' },
+        { url: 'photos3.jpg', category: 'training' },
+        { url: 'latte.jpg', category: 'coffee' },
+        { url: 'machine.jpg', category: 'coffee' },
+        { url: 'drinks.jpg', category: 'coffee' },
+        { url: 'art.jpg', category: 'events' }
+    ];
+    
     const images = JSON.parse(localStorage.getItem('galleryImages') || '[]');
-    if (images.length === 0) return;
+    const imagesToShow = images.length > 0 ? images : defaultGallery;
 
     const galleryGrid = document.querySelector('.gallery-grid');
     if (!galleryGrid) return;
 
     galleryGrid.innerHTML = '';
     
-    images.forEach(img => {
+    imagesToShow.forEach(img => {
         const div = document.createElement('div');
         div.className = 'gallery-item';
         div.dataset.category = img.category;
@@ -481,15 +499,22 @@ function loadGalleryFromStorage() {
 
 // Load Courses from localStorage on page load
 function loadCoursesFromStorage() {
+    const defaultCourses = [
+        { id: 1, name: 'Free Demo Class', duration: '1 Hour', price: 'FREE', desc: 'Experience our teaching style with a hands-on session.', features: ['Hands-on Experience', 'Meet Our Trainers', 'Tour Facilities', 'No Commitment'], isFree: true },
+        { id: 2, name: 'Basic to Advance', duration: '10 Days', price: 'NPR 10,000', desc: 'Complete barista training from basics to professional level.', features: ['Espresso Basics', 'Milk Steaming', 'Latte Art', 'Commercial Machine Training'] },
+        { id: 3, name: 'Advance Training', duration: '30 Days', price: 'NPR 18,000', desc: 'Master advanced techniques and business skills.', features: ['Advanced Latte Art', 'Coffee Business', 'Quality Control', 'Industry Certification'] },
+        { id: 4, name: 'Personal Coaching', duration: 'Flexible', price: 'Contact Us', desc: 'One-on-one personalized training at your own pace.', features: ['Custom Schedule', 'Individual Attention', 'Focus on Your Goals', 'Flexible Timing'] }
+    ];
+    
     const courses = JSON.parse(localStorage.getItem('site_courses') || localStorage.getItem('courses') || '[]');
-    if (courses.length === 0) return;
+    const coursesToShow = courses.length > 0 ? courses : defaultCourses;
 
     const coursesGrid = document.getElementById('coursesGrid');
     if (!coursesGrid) return;
 
     coursesGrid.innerHTML = '';
     
-    courses.forEach((course, index) => {
+    coursesToShow.forEach((course, index) => {
         const isFeatured = index === 2;
         const div = document.createElement('div');
         div.className = `course-card ${isFeatured ? 'featured' : ''}`;
