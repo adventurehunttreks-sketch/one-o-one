@@ -179,6 +179,21 @@ contactForm.addEventListener('submit', (e) => {
 
     // Get form values
     const formData = new FormData(contactForm);
+    
+    // Save submission to localStorage
+    const submission = {
+        id: Date.now(),
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        subject: formData.get('subject'),
+        message: formData.get('message'),
+        date: new Date().toISOString()
+    };
+    
+    const submissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+    submissions.unshift(submission);
+    localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
 
     // Show success message
     const btn = contactForm.querySelector('button');

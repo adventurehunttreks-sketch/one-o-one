@@ -12,6 +12,7 @@ const AdminPanel = {
         this.loadTeamMembers();
         this.loadCourses();
         this.loadSales();
+        this.loadContacts();
     },
 
     bindEvents() {
@@ -44,6 +45,9 @@ const AdminPanel = {
 
         // Sales management
         document.getElementById('saveSales')?.addEventListener('click', () => this.saveSales());
+
+        // Contacts management
+        document.getElementById('clearContacts')?.addEventListener('click', () => this.clearContacts());
 
         // Add image
         document.getElementById('addImage')?.addEventListener('click', () => this.addImage());
@@ -797,6 +801,54 @@ const AdminPanel = {
             `;
             salesGrid.appendChild(div);
         });
+    },
+
+    // Contact Management Functions
+    loadContacts() {
+        const submissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
+        const contactList = document.getElementById('contactList');
+        if (!contactList) return;
+
+        if (submissions.length === 0) {
+            contactList.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">No contact submissions yet.</p>';
+            return;
+        }
+
+        contactList.innerHTML = '';
+        submissions.forEach((sub, index) => {
+            const date = new Date(sub.date);
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const div = document.createElement('div');
+            div.className = 'admin-contact-item';
+            div.style.cssText = 'background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #6CB4EE;';
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <strong style="font-size: 16px; color: #333;">${sub.name}</strong>
+                    <span style="color: #888; font-size: 12px;">${formattedDate}</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                    <p style="margin: 0; color: #666;"><i class="fas fa-envelope" style="width: 20px; color: #6CB4EE;"></i> ${sub.email}</p>
+                    <p style="margin: 0; color: #666;"><i class="fas fa-phone" style="width: 20px; color: #6CB4EE;"></i> ${sub.phone}</p>
+                </div>
+                <p style="margin: 0 0 8px 0; color: #666;"><i class="fas fa-tag" style="width: 20px; color: #6CB4EE;"></i> <strong>Subject:</strong> ${sub.subject}</p>
+                <p style="margin: 0; color: #555; background: #fff; padding: 12px; border-radius: 8px;"><i class="fas fa-comment" style="width: 20px; color: #6CB4EE;"></i> ${sub.message}</p>
+            `;
+            contactList.appendChild(div);
+        });
+    },
+
+    clearContacts() {
+        if (!confirm('Are you sure you want to clear all contact submissions?')) return;
+        localStorage.removeItem('contactSubmissions');
+        this.loadContacts();
+        alert('All contact submissions have been cleared.');
     },
 
     changePassword() {
